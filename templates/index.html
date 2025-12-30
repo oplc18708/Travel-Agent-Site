@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Travel Agent - Get Started</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/static/style.css">
+  </head>
+  <body>
+    <nav class="navbar navbar-light bg-light mb-4">
+      <div class="container">
+        <a class="navbar-brand" href="/">Your Travel Agent</a>
+      </div>
+    </nav>
+
+    <main class="container">
+      <div class="row">
+        <div class="col-md-6">
+          <h1>Plan your next adventure</h1>
+          <p>Tell us a bit about your travel plans and we’ll get back with a personalized quote.</p>
+          <ul>
+            <li>Personalized itineraries</li>
+            <li>Group & family travel</li>
+            <li>Flights, hotels, activities</li>
+          </ul>
+        </div>
+        <div class="col-md-6">
+          <div class="card p-3 shadow-sm">
+            <h4 class="card-title">Interest Form</h4>
+            <form action="/submit" method="post">
+              <div class="mb-2">
+                <label class="form-label">Full name</label>
+                <input class="form-control" name="name" required>
+              </div>
+              <div class="mb-2">
+                <label class="form-label">Email</label>
+                <input type="email" class="form-control" name="email" required>
+              </div>
+              <div class="mb-2">
+                <label class="form-label">Phone</label>
+                <input class="form-control" name="phone">
+              </div>
+              <div class="mb-2">
+                <label class="form-label">Destination</label>
+                <input class="form-control" name="destination">
+              </div>
+              <div class="mb-2">
+                <label class="form-label">Approx. travel date</label>
+                <input class="form-control" name="travel_date" placeholder="YYYY-MM-DD">
+              </div>
+              <div class="mb-2">
+                <label class="form-label">Budget (optional)</label>
+                <input class="form-control" name="budget">
+              </div>
+              <div class="mb-2">
+                <label class="form-label">Message / details</label>
+                <textarea class="form-control" name="message" rows="3"></textarea>
+              </div>
+              <button class="btn btn-primary mt-2" type="submit">Send interest</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <footer class="mt-5 py-3 bg-light text-center">
+      <div class="container">&copy; Your Travel Agent</div>
+    </footer>
+  </body>
+</html>
