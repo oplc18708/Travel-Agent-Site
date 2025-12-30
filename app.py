@@ -11,6 +11,9 @@ app.config['SECRET_KEY'] = os.environ.get('FLASK_SECRET_KEY', 'dev')
 
 
 def init_db():
+    db_dir = os.path.dirname(DB_PATH)
+    if db_dir:
+        os.makedirs(db_dir, exist_ok=True)
     conn = sqlite3.connect(DB_PATH)
     c = conn.cursor()
     c.execute('''
