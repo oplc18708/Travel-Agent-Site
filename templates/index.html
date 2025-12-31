@@ -3,27 +3,37 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Travel Agent - Get Started</title>
+    <title>The Casey Compass - Get Started</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="/static/style.css">
   </head>
   <body>
-    <nav class="navbar navbar-light bg-light mb-4">
+    <nav class="navbar navbar-light mb-4">
       <div class="container">
-        <a class="navbar-brand" href="/">Your Travel Agent</a>
+        <a class="navbar-brand" href="/">The Casey Compass</a>
       </div>
     </nav>
 
     <main class="container">
       <div class="row">
         <div class="col-md-6">
+          <span class="eyebrow">Disney + beyond</span>
           <h1>Plan your next adventure</h1>
           <p>Tell us a bit about your travel plans and we’ll get back with a personalized quote.</p>
-          <ul>
+          <ul class="feature-list">
             <li>Personalized itineraries</li>
-            <li>Group & family travel</li>
-            <li>Flights, hotels, activities</li>
+            <li>Theme park magic & character moments</li>
+            <li>Resort, cruise, and dining coordination</li>
           </ul>
+          <div class="whimsy-card mt-4">
+            <h5>Whimsy touches we love</h5>
+            <p>Pixie-dusted planning, surprise celebrations, and storybook details that make every day feel enchanted.</p>
+            <div class="whimsy-tags">
+              <span>Park strategy</span>
+              <span>Princess-worthy stays</span>
+              <span>Firework nights</span>
+            </div>
+          </div>
         </div>
         <div class="col-md-6">
           <div class="card p-3 shadow-sm">
@@ -54,6 +64,18 @@
                 <input class="form-control" name="budget">
               </div>
               <div class="mb-2">
+                <label class="form-label">Inspiration images (optional)</label>
+                <div class="image-drop-list">
+                  <div class="image-drop-row input-group mb-2">
+                    <span class="input-group-text">Image 1</span>
+                    <input type="url" class="form-control image-input" name="image_urls" placeholder="https://example.com/inspo.jpg">
+                    <button class="btn btn-outline-secondary remove-image" type="button" aria-label="Remove image">&times;</button>
+                  </div>
+                </div>
+                <button class="btn btn-sm btn-outline-primary add-image" type="button">Add another image</button>
+                <div class="form-text">Paste links to inspiration photos or trip vibes you love.</div>
+              </div>
+              <div class="mb-2">
                 <label class="form-label">Message / details</label>
                 <textarea class="form-control" name="message" rows="3"></textarea>
               </div>
@@ -64,8 +86,48 @@
       </div>
     </main>
 
-    <footer class="mt-5 py-3 bg-light text-center">
-      <div class="container">&copy; Your Travel Agent</div>
+    <footer class="mt-5 py-3 text-center footer">
+      <div class="container">&copy; The Casey Compass</div>
     </footer>
+    <script>
+      const list = document.querySelector('.image-drop-list');
+      const addBtn = document.querySelector('.add-image');
+
+      const updateLabels = () => {
+        list.querySelectorAll('.image-drop-row').forEach((row, index) => {
+          const label = row.querySelector('.input-group-text');
+          label.textContent = `Image ${index + 1}`;
+        });
+      };
+
+      const addRow = () => {
+        const row = document.createElement('div');
+        row.className = 'image-drop-row input-group mb-2';
+        row.innerHTML = `
+          <span class="input-group-text">Image ${list.children.length + 1}</span>
+          <input type="url" class="form-control image-input" name="image_urls" placeholder="https://example.com/inspo.jpg">
+          <button class="btn btn-outline-secondary remove-image" type="button" aria-label="Remove image">&times;</button>
+        `;
+        list.appendChild(row);
+      };
+
+      list.addEventListener('click', (event) => {
+        if (!event.target.classList.contains('remove-image')) {
+          return;
+        }
+        const row = event.target.closest('.image-drop-row');
+        if (list.children.length === 1) {
+          row.querySelector('input').value = '';
+          return;
+        }
+        row.remove();
+        updateLabels();
+      });
+
+      addBtn.addEventListener('click', () => {
+        addRow();
+        updateLabels();
+      });
+    </script>
   </body>
 </html>
