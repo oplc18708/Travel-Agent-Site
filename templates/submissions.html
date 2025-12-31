@@ -3,13 +3,19 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Submissions</title>
+    <title>The Casey Compass - Submissions</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/static/style.css">
   </head>
   <body>
+    <nav class="navbar navbar-light mb-4">
+      <div class="container">
+        <span class="navbar-brand">The Casey Compass</span>
+      </div>
+    </nav>
     <main class="container py-4">
       <h1>Submissions</h1>
-      <table class="table table-striped table-sm">
+      <table class="table table-striped table-sm submissions-table">
         <thead>
           <tr>
             <th>ID</th>
@@ -18,6 +24,7 @@
             <th>Destination</th>
             <th>Travel Date</th>
             <th>Budget</th>
+            <th>Images</th>
             <th>Message</th>
             <th>Received</th>
           </tr>
@@ -31,11 +38,22 @@
             <td>{{ s.destination }}</td>
             <td>{{ s.travel_date }}</td>
             <td>{{ s.budget }}</td>
+            <td>
+              {% if s.image_urls %}
+                <ul class="list-unstyled mb-0">
+                  {% for url in s.image_urls.splitlines() %}
+                    <li><a href="{{ url }}" target="_blank" rel="noopener">{{ url }}</a></li>
+                  {% endfor %}
+                </ul>
+              {% else %}
+                <span class="text-muted">—</span>
+              {% endif %}
+            </td>
             <td>{{ s.message }}</td>
             <td>{{ s.created_at }}</td>
           </tr>
           {% else %}
-          <tr><td colspan="8">No submissions yet</td></tr>
+          <tr><td colspan="9">No submissions yet</td></tr>
           {% endfor %}
         </tbody>
       </table>

@@ -11,6 +11,9 @@ app.config['SECRET_KEY'] = os.environ.get('FLASK_SECRET_KEY', 'dev')
 
 
 def init_db():
+    db_dir = os.path.dirname(DB_PATH)
+    if db_dir:
+        os.makedirs(db_dir, exist_ok=True)
     conn = sqlite3.connect(DB_PATH)
     c = conn.cursor()
     c.execute('''
@@ -22,10 +25,15 @@ def init_db():
             destination TEXT,
             travel_date TEXT,
             budget TEXT,
+            image_urls TEXT,
             message TEXT,
             created_at TEXT
         )
     ''')
+    c.execute('PRAGMA table_info(submissions)')
+    columns = {row[1] for row in c.fetchall()}
+    if 'image_urls' not in columns:
+        c.execute('ALTER TABLE submissions ADD COLUMN image_urls TEXT')
     conn.commit()
     conn.close()
 
@@ -46,13 +54,19 @@ def submit():
     destination = request.form.get('destination', '').strip()
     travel_date = request.form.get('travel_date', '').strip()
     budget = request.form.get('budget', '').strip()
+    image_urls = [
+        url.strip()
+        for url in request.form.getlist('image_urls')
+        if url.strip()
+    ]
+    image_urls_text = '\n'.join(image_urls)
     message = request.form.get('message', '').strip()
     created_at = datetime.datetime.utcnow().isoformat()
 
     conn = sqlite3.connect(DB_PATH)
     c = conn.cursor()
-    c.execute('''INSERT INTO submissions (name, email, phone, destination, travel_date, budget, message, created_at)
-                 VALUES (?, ?, ?, ?, ?, ?, ?, ?)''', (name, email, phone, destination, travel_date, budget, message, created_at))
+    c.execute('''INSERT INTO submissions (name, email, phone, destination, travel_date, budget, image_urls, message, created_at)
+                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)''', (name, email, phone, destination, travel_date, budget, image_urls_text, message, created_at))
     conn.commit()
     conn.close()
 
