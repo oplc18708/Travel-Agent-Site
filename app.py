@@ -98,13 +98,23 @@ def submit():
     destination = request.form.get('destination', '').strip()
     travel_date = request.form.get('travel_date', '').strip()
     budget = request.form.get('budget', '').strip()
+    image_urls = [
+        url.strip()
+        for url in request.form.getlist('image_urls')
+        if url.strip()
+    ]
+    image_urls_text = '\n'.join(image_urls)
     message = request.form.get('message', '').strip()
     created_at = datetime.datetime.utcnow().isoformat()
 
     conn = sqlite3.connect(DB_PATH)
     c = conn.cursor()
     c.execute('''INSERT INTO submissions (name, email, phone, destination, travel_date, budget, image_urls, message, created_at)
+<<<<<<< HEAD
                  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)''', (name, email, phone, destination, travel_date, budget, '', message, created_at))
+=======
+                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)''', (name, email, phone, destination, travel_date, budget, image_urls_text, message, created_at))
+>>>>>>> main
     conn.commit()
     conn.close()
 
