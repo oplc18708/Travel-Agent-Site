@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>The Casey Compass - Admin</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/static/style.css">
+  </head>
+  <body>
+    <nav class="navbar navbar-light mb-4">
+      <div class="container d-flex justify-content-between align-items-center">
+        <span class="navbar-brand">The Casey Compass</span>
+        <form action="/admin/logout" method="post">
+          <button class="btn btn-sm btn-outline-primary" type="submit">Sign out</button>
+        </form>
+      </div>
+    </nav>
+    <main class="container py-4">
+      <div class="row g-4">
+        <div class="col-lg-5">
+          <div class="admin-card">
+            <h1 class="h4 mb-3">Homepage content</h1>
+            <form action="/admin" method="post">
+              <div class="mb-3">
+                <label class="form-label">Hero heading</label>
+                <input class="form-control" name="hero_heading" value="{{ settings.hero_heading }}">
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Hero subheading</label>
+                <textarea class="form-control" name="hero_subheading">{{ settings.hero_subheading }}</textarea>
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Feature list (one per line)</label>
+                <textarea class="form-control" name="feature_list">{{ settings.feature_list | join('\\n') }}</textarea>
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Whimsy card title</label>
+                <input class="form-control" name="whimsy_title" value="{{ settings.whimsy_title }}">
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Whimsy card message</label>
+                <textarea class="form-control" name="whimsy_body">{{ settings.whimsy_body }}</textarea>
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Whimsy tags (one per line)</label>
+                <textarea class="form-control" name="whimsy_tags">{{ settings.whimsy_tags | join('\\n') }}</textarea>
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Gallery image URLs (one per line)</label>
+                <textarea class="form-control" name="gallery_images">{{ settings.gallery_images | join('\\n') }}</textarea>
+              </div>
+              <div class="admin-actions">
+                <button class="btn btn-primary" type="submit">Save updates</button>
+                <a class="btn btn-outline-primary" href="/">View site</a>
+              </div>
+            </form>
+          </div>
+        </div>
+        <div class="col-lg-7">
+          <div class="admin-card">
+            <h2 class="h5 mb-3">Recent submissions</h2>
+            <div class="table-responsive">
+              <table class="table table-striped table-sm submissions-table">
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Destination</th>
+                    <th>Travel Date</th>
+                    <th>Budget</th>
+                    <th>Message</th>
+                    <th>Received</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for s in submissions %}
+                  <tr>
+                    <td>{{ s.id }}</td>
+                    <td>{{ s.name }}</td>
+                    <td>{{ s.email }}</td>
+                    <td>{{ s.destination }}</td>
+                    <td>{{ s.travel_date }}</td>
+                    <td>{{ s.budget }}</td>
+                    <td>{{ s.message }}</td>
+                    <td>{{ s.created_at }}</td>
+                  </tr>
+                  {% else %}
+                  <tr><td colspan="8">No submissions yet</td></tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </body>
+</html>
