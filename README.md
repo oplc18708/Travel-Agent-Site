@@ -10,10 +10,13 @@ Quick start (build locally):
 docker build -t travel-agent-site .
 ```
 
+If you're building from a tool that needs an explicit Dockerfile (such as Unraid's Docker build UI),
+set the build context to the repo root and the Dockerfile path to `Dockerfile`.
+
 2. Run the container (map a host folder for persistent DB):
 
 ```powershell
-docker run -d -p 5000:5000 -v ${PWD}/data:/app -e ADMIN_KEY=your_admin_key --name travel-agent-site travel-agent-site
+docker run -d -p 5000:80 -v ${PWD}/data:/app/data -e ADMIN_KEY=your_admin_key -e DB_PATH=/app/data/submissions.db --name travel-agent-site travel-agent-site
 ```
 
 The form is available at `http://localhost:5000/`.
@@ -24,8 +27,9 @@ Open `http://localhost:5000/admin?key=your_admin_key` and replace `your_admin_ke
 
 Unraid notes:
 - Use the Docker build option in Unraid or build locally and push to a registry.
-- Map a host folder to `/app` in the container so `submissions.db` is kept on the host.
-- Expose port `5000` on the container to a port of your choice on the Unraid host.
+- Map a host folder (for example, `/mnt/user/appdata/travel-agent-site`) to `/app/data` in the container.
+- Set `DB_PATH=/app/data/submissions.db` so the SQLite DB is persisted on the host.
+- Expose port `80` on the container to a port of your choice on the Unraid host.
 
 Files of interest:
 - `app.py` - Flask application

@@ -1,16 +1,20 @@
 import os
 import sqlite3
 import datetime
-from flask import Flask, render_template, request, abort
+from flask import Flask, render_template, request, redirect, url_for, session
 
 DB_PATH = os.environ.get('DB_PATH', 'submissions.db')
-ADMIN_KEY = os.environ.get('ADMIN_KEY', 'changeme')
+ADMIN_USERNAME = os.environ.get('ADMIN_USERNAME', 'admin')
+ADMIN_PASSWORD = os.environ.get('ADMIN_PASSWORD', 'changeme')
 
 app = Flask(__name__, static_folder='static')
 app.config['SECRET_KEY'] = os.environ.get('FLASK_SECRET_KEY', 'dev')
 
 
 def init_db():
+    db_dir = os.path.dirname(DB_PATH)
+    if db_dir:
+        os.makedirs(db_dir, exist_ok=True)
     conn = sqlite3.connect(DB_PATH)
     c = conn.cursor()
     c.execute('''
@@ -22,10 +26,15 @@ def init_db():
             destination TEXT,
             travel_date TEXT,
             budget TEXT,
+            image_urls TEXT,
             message TEXT,
             created_at TEXT
         )
     ''')
+    c.execute('PRAGMA table_info(submissions)')
+    columns = {row[1] for row in c.fetchall()}
+    if 'image_urls' not in columns:
+        c.execute('ALTER TABLE submissions ADD COLUMN image_urls TEXT')
     conn.commit()
     conn.close()
 
@@ -51,8 +60,8 @@ def submit():
 
     conn = sqlite3.connect(DB_PATH)
     c = conn.cursor()
-    c.execute('''INSERT INTO submissions (name, email, phone, destination, travel_date, budget, message, created_at)
-                 VALUES (?, ?, ?, ?, ?, ?, ?, ?)''', (name, email, phone, destination, travel_date, budget, message, created_at))
+    c.execute('''INSERT INTO submissions (name, email, phone, destination, travel_date, budget, image_urls, message, created_at)
+                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)''', (name, email, phone, destination, travel_date, budget, '', message, created_at))
     conn.commit()
     conn.close()
 
@@ -61,9 +70,8 @@ def submit():
 
 @app.route('/admin', methods=['GET'])
 def admin():
-    key = request.args.get('key', '')
-    if key != ADMIN_KEY:
-        abort(401)
+    if not session.get('is_admin'):
+        return render_template('admin_login.html')
 
     conn = sqlite3.connect(DB_PATH)
     conn.row_factory = sqlite3.Row
@@ -71,7 +79,23 @@ def admin():
     c.execute('SELECT * FROM submissions ORDER BY created_at DESC')
     rows = c.fetchall()
     conn.close()
-    return render_template('submissions.html', submissions=rows)
+    return render_template('admin.html', submissions=rows)
+
+
+@app.route('/admin/login', methods=['POST'])
+def admin_login():
+    username = request.form.get('username', '')
+    password = request.form.get('password', '')
+    if username == ADMIN_USERNAME and password == ADMIN_PASSWORD:
+        session['is_admin'] = True
+        return redirect(url_for('admin'))
+    return render_template('admin_login.html', error='Invalid credentials')
+
+
+@app.route('/admin/logout', methods=['POST'])
+def admin_logout():
+    session.pop('is_admin', None)
+    return redirect(url_for('index'))
 
 
 if __name__ == '__main__':
