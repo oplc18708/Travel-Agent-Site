@@ -69,28 +69,6 @@ body {
   border-color: #5b6cff;
 }
 
-.image-drop-list .image-drop-row {
-  border: 1px dashed rgba(91, 108, 255, 0.45);
-  border-radius: 10px;
-  overflow: hidden;
-}
-
-.image-drop-list .input-group-text {
-  background: #eef1ff;
-  color: #3c4bd6;
-  border: none;
-  font-weight: 600;
-}
-
-.image-drop-list .form-control {
-  border: none;
-  background: #fff;
-}
-
-.image-drop-list .remove-image {
-  border: none;
-}
-
 .whimsy-card {
   background: #ffffff;
   border-radius: 16px;
@@ -122,6 +100,38 @@ body {
   border-radius: 999px;
   font-size: 0.85rem;
   font-weight: 600;
+}
+
+.gallery-card {
+  background: #ffffff;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 12px 24px rgba(31, 42, 68, 0.08);
+}
+
+.gallery-card img {
+  width: 100%;
+  height: 220px;
+  object-fit: cover;
+  display: block;
+}
+
+.admin-card {
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 12px 24px rgba(31, 42, 68, 0.08);
+  padding: 1.5rem;
+}
+
+.admin-card textarea {
+  min-height: 140px;
+}
+
+.admin-actions {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: flex-end;
+  flex-wrap: wrap;
 }
 
 .footer {
